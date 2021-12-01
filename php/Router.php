@@ -50,6 +50,7 @@ class Router {
 				'lodash',
 				'react',
 				'wp-block-editor',
+				'wp-server-side-render',
 			],
 			$this->plugin->asset_version()
 		);

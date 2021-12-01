@@ -11,7 +11,7 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 module.exports = {
 	...defaultConfig,
 	entry: {
-		editor: './js/src/editor.js',
+		editor: './js/src/amp-dynamic-stats.js',
 	},
 	output: {
 		path: path.resolve( __dirname, 'js/dist' ),
