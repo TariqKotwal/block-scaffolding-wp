@@ -74,8 +74,7 @@ class TestAmpStatsBlock extends TestCase {
 			->once()
 			->with( 'amp-gutenberg/amp-dynamic-stats', $reg_block_args );
 
-		$this->assertNotEquals( false, $amp_stats_block->register_gutenberg_amp_dynamic_stats_block( 'amp-gutenberg/amp-dynamic-stats', $reg_block_args ) );
-		// $this->assertNotEquals( false, $amp_stats_block->gutenberg_amp_dynamic_stats() );
+		$this->assertEquals( null, $amp_stats_block->register_gutenberg_amp_dynamic_stats_block( 'amp-gutenberg/amp-dynamic-stats', $reg_block_args ) );
 	}
 
 }
