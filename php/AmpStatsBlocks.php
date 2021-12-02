@@ -136,7 +136,7 @@ class AmpStatsBlocks {
 			$this->amp_body .= '<p>' . sprintf( __( 'The template mode is %s' ), $amp_stats['template_mode'] ) . '.</p>';
 		}
 		if ( '' !== $this->amp_body ) {
-			$this->amp_body = '<div>' . $this->amp_body . '</div>';
+			$this->amp_body = '<div ' . ( ! empty( $block_attributes['className'] ) ? 'class="' . $block_attributes['className'] . '"' : '' ) . '>' . $this->amp_body . '</div>';
 		}
 		return $this->amp_body;
 	}
