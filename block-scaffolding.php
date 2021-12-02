@@ -17,7 +17,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
 
-$router = new Router( new Plugin( __FILE__ ) );
+$router           = new Router( new Plugin( __FILE__ ) );
 $amp_stats_blocks = new AmpStatsBlocks();
 
 add_action( 'plugins_loaded', [ $router, 'init' ] );
