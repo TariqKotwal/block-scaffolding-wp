@@ -59,7 +59,6 @@ class AmpStatsBlocks {
 	 */
 	public function gutenberg_amp_dynamic_stats() {
 		$args = array(
-			'api_version'     => 2,
 			'editor_script'   => 'block-scaffolding-js',
 			'render_callback' => array( $this, 'gutenberg_amp_dynamic_render_callback' ),
 			'title'           => __( 'AMP Validation Statistics' ),
@@ -118,6 +117,7 @@ class AmpStatsBlocks {
 	 * @return string
 	 */
 	public function amp_stats_get_block_body( $amp_stats, $block_attributes ) {
+		$this->amp_body = '';
 		if ( null !== $amp_stats['total_validated_urls'] ) {
 			$amp_stats['total_validated_urls'] = intval( $amp_stats['total_validated_urls'] );
 			/* translators: %s: total validated urls */

@@ -56,7 +56,6 @@ class TestAmpStatsBlock extends TestCase {
 
 		$amp_stats_block = new AmpStatsBlocks();
 		$reg_block_args  = array(
-			'api_version'   => 2,
 			'editor_script' => 'block-scaffolding-js',
 			'title'         => __( 'AMP Validation Statistics' ),
 			'icon'          => 'dashboard',
