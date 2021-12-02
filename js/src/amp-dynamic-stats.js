@@ -26,6 +26,6 @@ registerBlockType( 'amp-gutenberg/amp-dynamic-stats', {
 	edit: ( props ) => {
         const { attributes, setAttributes } = props;
 	    const { show } = attributes;
-        return <div { ...props }> <Fragment> <InspectorControls> <PanelBody title="Additional Statistics" initialOpen={ false }> <ToggleControl className="show-template-mode" label="Display AMP template mode" onChange={ () => setAttributes({ show: !show }) } /> </PanelBody> </InspectorControls> </Fragment> <ServerSideRender block="amp-gutenberg/amp-dynamic-stats" attributes={ props.attributes } /> </div>;
+        return <div { ...props }> <Fragment> <InspectorControls> <PanelBody title="Additional Statistics" initialOpen={ false }> <ToggleControl className="show-template-mode" label="Display AMP template mode" checked={ show } onChange={ () => setAttributes({ show: !show }) } /> </PanelBody> </InspectorControls> </Fragment> <ServerSideRender block="amp-gutenberg/amp-dynamic-stats" attributes={ props.attributes } /> </div>;
     }
 } );
