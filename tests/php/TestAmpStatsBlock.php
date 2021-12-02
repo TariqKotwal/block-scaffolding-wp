@@ -22,7 +22,9 @@ class TestAmpStatsBlock extends TestCase {
 	 */
 	public function test_init() {
 		$amp_stats_block = new AmpStatsBlocks();
-
+		if ( ! defined( 'AMP__VERSION' ) ) {
+			define( 'AMP__VERSION', '2.1.4' );
+		}
 		WP_Mock::expectActionAdded( 'init', [ $amp_stats_block, 'gutenberg_amp_dynamic_stats' ], 10, 1 );
 
 		$amp_stats_block->init();

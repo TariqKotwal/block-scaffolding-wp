@@ -34,7 +34,10 @@ class AmpStatsBlocks {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'gutenberg_amp_dynamic_stats' ] );
+		// Check if AMP Plugin is active.
+		if ( defined( 'AMP__VERSION' ) ) {
+			add_action( 'init', [ $this, 'gutenberg_amp_dynamic_stats' ] );
+		}
 	}
 
 	/**
