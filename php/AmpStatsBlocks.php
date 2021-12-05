@@ -13,6 +13,13 @@ namespace XWP\BlockScaffolding;
 class AmpStatsBlocks {
 
 	/**
+	 * A class instance.
+	 *
+	 * @var object
+	 */
+	protected static $instance = null;
+
+	/**
 	 * AMP Statistics content.
 	 *
 	 * @var string
@@ -24,7 +31,7 @@ class AmpStatsBlocks {
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	private function __construct() {
 		$this->amp_body = '';
 	}
 
@@ -75,21 +82,8 @@ class AmpStatsBlocks {
 				),
 			),
 		);
-		$this->register_gutenberg_amp_dynamic_stats_block( 'amp-gutenberg/amp-dynamic-stats', $args );
-	}
-
-	/**
-	 * To register custom block.
-	 *
-	 * @param  string $block_type Block type.
-	 *
-	 * @param  array  $args Arguments for Block.
-	 *
-	 * @return mixed boolean|object
-	 */
-	public function register_gutenberg_amp_dynamic_stats_block( $block_type, $args ) {
-		return register_block_type(
-			$block_type,
+		register_block_type(
+			'amp-gutenberg/amp-dynamic-stats',
 			$args
 		);
 	}
@@ -100,14 +94,40 @@ class AmpStatsBlocks {
 	 * @return array
 	 */
 	public function get_amp_stats() {
-		$amp_options            = \get_option( 'amp-options' );
-		$total_validated_errors = \wp_count_terms( 'amp_validation_error' );
-		$data                   = array(
-			'total_validated_urls'   => \wp_count_posts( 'amp_validated_url' )->publish,
-			'total_validated_errors' => ! \is_wp_error( $total_validated_errors ) ? $total_validated_errors : 0,
-			'template_mode'          => ! empty( $amp_options['theme_support'] ) ? $amp_options['theme_support'] : '',
+		$data = array(
+			'total_validated_urls'   => $this->get_total_validated_urls(),
+			'total_validated_errors' => $this->get_total_validation_errors(),
+			'template_mode'          => $this->get_template_mode(),
 		);
 		return $data;
+	}
+
+	/**
+	 * Returns total validated URLs count with 'publish' status.
+	 *
+	 * @return int
+	 */
+	public function get_total_validated_urls() {
+		$validated_urls = wp_count_posts( 'amp_validated_url' );
+		return $validated_urls->publish;
+	}
+
+	/**
+	 * Returns total validation errors count.
+	 *
+	 * @return int
+	 */
+	public function get_total_validation_errors() {
+		return wp_count_terms( 'amp_validation_error' );
+	}
+
+	/**
+	 * Returns currently active template mode.
+	 *
+	 * @return string
+	 */
+	public function get_template_mode() {
+		return \AMP_Options_Manager::get_option( 'theme_support' );
 	}
 
 	/**
@@ -123,21 +143,47 @@ class AmpStatsBlocks {
 		$this->amp_body = '';
 		if ( null !== $amp_stats['total_validated_urls'] ) {
 			$amp_stats['total_validated_urls'] = intval( $amp_stats['total_validated_urls'] );
-			/* translators: %s: total validated urls */
-			$this->amp_body .= ( $amp_stats['total_validated_urls'] >= 0 ) ? '<p>' . sprintf( _n( 'There is %s validated URL.', 'There are %s validated URLs.', $amp_stats['total_validated_urls'] ), number_format_i18n( $amp_stats['total_validated_urls'] ) ) . '</p>' : '';
+			if ( $amp_stats['total_validated_urls'] >= 0 ) {
+				if ( 1 === $amp_stats['total_validated_urls'] ) {
+					/* translators: %s: total validated urls */
+					$this->amp_body .= '<p>' . sprintf( __( 'There is %s validated URL.' ), $amp_stats['total_validated_urls'] ) . '</p>';
+				} else {
+					/* translators: %s: total validated urls */
+					$this->amp_body .= '<p>' . sprintf( __( 'There are %s validated URLs.' ), $amp_stats['total_validated_urls'] ) . '</p>';
+				}
+			}
 		}
 		if ( null !== $amp_stats['total_validated_errors'] ) {
 			$amp_stats['total_validated_errors'] = intval( $amp_stats['total_validated_errors'] );
-			/* translators: %s: total validation errors */
-			$this->amp_body .= ( $amp_stats['total_validated_errors'] >= 0 ) ? '<p>' . sprintf( _n( 'There is %s validation error.', 'There are %s validation errors.', $amp_stats['total_validated_errors'] ), number_format_i18n( $amp_stats['total_validated_errors'] ) ) . '</p>' : '';
+			if ( $amp_stats['total_validated_errors'] >= 0 ) {
+				if ( 1 === $amp_stats['total_validated_errors'] ) {
+					/* translators: %s: total validation errors */
+					$this->amp_body .= '<p>' . sprintf( __( 'There is %s validation error.' ), $amp_stats['total_validated_errors'] ) . '</p>';
+				} else {
+					/* translators: %s: total validation errors */
+					$this->amp_body .= '<p>' . sprintf( __( 'There are %s validation errors.' ), $amp_stats['total_validated_errors'] ) . '</p>';
+				}
+			}
 		}
 		if ( '' !== $amp_stats['template_mode'] && ! empty( $block_attributes['show'] ) ) {
 			/* translators: %s: template mode */
 			$this->amp_body .= '<p>' . sprintf( __( 'The template mode is %s' ), $amp_stats['template_mode'] ) . '.</p>';
 		}
 		if ( '' !== $this->amp_body ) {
-			$this->amp_body = '<div ' . ( ! empty( $block_attributes['className'] ) ? 'class="' . $block_attributes['className'] . '"' : '' ) . '>' . $this->amp_body . '</div>';
+			$this->amp_body = '<div' . ( ! empty( $block_attributes['className'] ) ? ' class="' . $block_attributes['className'] . '"' : '' ) . '>' . $this->amp_body . '</div>';
 		}
 		return $this->amp_body;
+	}
+
+	/**
+	 * Returns object, creates if not already created. A singleton class function to get the object.
+	 *
+	 * @return object of the class.
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
+		return self::$instance;
 	}
 }
