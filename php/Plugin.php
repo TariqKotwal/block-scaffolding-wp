@@ -169,7 +169,14 @@ class Plugin {
 		static $meta;
 
 		if ( ! isset( $meta ) ) {
-			$meta = get_file_data( $this->file );
+			$meta = get_file_data(
+				$this->file,
+				array(
+					'ver'    => 'Version',
+					'author' => 'Author',
+					'name'   => 'Plugin Name',
+				)
+			);
 		}
 
 		if ( isset( $field ) ) {
