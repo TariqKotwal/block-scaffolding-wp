@@ -31,9 +31,7 @@ class AmpStatsBlocks {
 	 *
 	 * @return void
 	 */
-	private function __construct() {
-		$this->amp_body = '';
-	}
+	private function __construct() {}
 
 	/**
 	 * Hook into WP.
@@ -55,10 +53,7 @@ class AmpStatsBlocks {
 	 * @return string
 	 */
 	public function gutenberg_amp_dynamic_render_callback( $block_attributes ) {
-		ob_start();
-		echo $this->amp_stats_get_block_body( $this->get_amp_stats(), $block_attributes );
-		$output = ob_get_contents();
-		ob_end_clean();
+		$output = $this->amp_stats_get_block_body( $this->get_amp_stats(), $block_attributes );
 		return $output;
 	}
 
@@ -184,6 +179,7 @@ class AmpStatsBlocks {
 		if ( null === self::$instance ) {
 			self::$instance = new self;
 		}
+		self::$instance->amp_body = '';
 		return self::$instance;
 	}
 }
